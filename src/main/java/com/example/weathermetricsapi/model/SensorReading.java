@@ -1,7 +1,6 @@
 package com.example.weathermetricsapi.model;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public class SensorReading {
     private String sensorId;

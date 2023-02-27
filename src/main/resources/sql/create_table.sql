@@ -7,4 +7,3 @@ CREATE TABLE weather_sensor_readings (
   INDEX (reading_date),
   INDEX (sensor_id)
 );
-

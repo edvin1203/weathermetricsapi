@@ -30,9 +30,9 @@ public class SensorReadingController {
     }
 
     @GetMapping("/average-metric-value/{metric}")
-    public ResponseEntity<?> getAverageMetricValueForAllSensors(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'") LocalDateTime startDate,
-                                                                @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'") LocalDateTime endDate,
-                                                                @PathVariable String metric) {
+    public ResponseEntity<?> getAverageMetricValue(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'") LocalDateTime startDate,
+                                                   @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'") LocalDateTime endDate,
+                                                   @PathVariable String metric) {
         try {
             double average = sensorReadingDao.getAverageMetricValue(metric, startDate, endDate);
             return ResponseEntity.ok().body(average);

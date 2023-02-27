@@ -26,6 +26,8 @@ public class SensorReadingControllerTest {
     @InjectMocks
     private SensorReadingController controller;
 
+    private static final String INVALID_METRIC_MESSAGE = "Invalid metric type. Available metrics: 'temperature', 'windspeed', 'humidity'";
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -44,7 +46,7 @@ public class SensorReadingControllerTest {
         doThrow(new InvalidMetricException()).when(sensorReadingDao).insertSensorReading(sensorReading);
         ResponseEntity<?> response = controller.createSensorReading(sensorReading);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("Invalid metric type. Available metrics: 'temperature', 'windspeed', 'humidity'", response.getBody());
+        assertEquals(INVALID_METRIC_MESSAGE, response.getBody());
     }
 
     @Test
@@ -54,7 +56,7 @@ public class SensorReadingControllerTest {
         double average = 10.0;
         String metric = "temperature";
         when(sensorReadingDao.getAverageMetricValue(metric, startDate, endDate)).thenReturn(average);
-        ResponseEntity<?> response = controller.getAverageMetricValueForAllSensors(startDate, endDate, metric);
+        ResponseEntity<?> response = controller.getAverageMetricValue(startDate, endDate, metric);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(average, response.getBody());
     }
@@ -65,9 +67,9 @@ public class SensorReadingControllerTest {
         LocalDateTime endDate = LocalDateTime.now().plusHours(1);
         String metric = "invalid_metric";
         when(sensorReadingDao.getAverageMetricValue(metric, startDate, endDate)).thenThrow(new InvalidMetricException());
-        ResponseEntity<?> response = controller.getAverageMetricValueForAllSensors(startDate, endDate, metric);
+        ResponseEntity<?> response = controller.getAverageMetricValue(startDate, endDate, metric);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("Invalid metric type. Available metrics: 'temperature', 'windspeed', 'humidity'", response.getBody());
+        assertEquals(INVALID_METRIC_MESSAGE, response.getBody());
     }
 
     @Test
@@ -92,6 +94,6 @@ public class SensorReadingControllerTest {
         when(sensorReadingDao.getAverageMetricValueBySensor(sensorId, metric, startDate, endDate)).thenThrow(new InvalidMetricException());
         ResponseEntity<?> response = controller.getAverageMetricValueForSensor(sensorId, metric, startDate, endDate);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("Invalid metric type. Available metrics: 'temperature', 'windspeed', 'humidity'", response.getBody());
+        assertEquals(INVALID_METRIC_MESSAGE, response.getBody());
     }
 }
